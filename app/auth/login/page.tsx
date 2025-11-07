@@ -11,7 +11,7 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-            <div className="relative flex-1">
+            <div className="relative flex-1 hidden lg:block">
                 <Image
                     src="/AuthImage.jpg"
                     alt="Image"
