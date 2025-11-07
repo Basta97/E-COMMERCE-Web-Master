@@ -39,12 +39,10 @@ export function LoginForm({
             const data = await res.json()
             if(res.ok){
             const AccessToken = data.AccessToken
-            const refreshToken = data.refreshToken
             const userId = data.user.id 
             localStorage.setItem('AccessToken',AccessToken)
-            localStorage.setItem('refreshToken',refreshToken)
             localStorage.setItem('userId',userId)
-            dispatch(setAuth({AccessToken,refreshToken,userId}))
+            dispatch(setAuth({AccessToken,userId}))
                 router.push("/")
             }
             else {
