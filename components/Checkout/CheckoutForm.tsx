@@ -1,3 +1,4 @@
+// components/CheckoutForm.tsx (Updated)
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import {
@@ -15,7 +16,8 @@ import { Button } from "../ui/button";
 
 const CheckoutForm = () => {
   return (
-    <div className="space-y-6 flex-2 lg:flex-3 ">
+    // REMOVED: flex-2 lg:flex-3
+    <div className="space-y-6">
       {/* Contact */}
       <div>
         <div className="flex items-center justify-between">
@@ -32,7 +34,7 @@ const CheckoutForm = () => {
           type="text"
           placeholder="Email or mobile phone number"
           className="w-full border-2 border-bluemain placeholder:text-graytext rounded-sm p-2.5 mb-3
-                            text-sm focus:outline-none"
+                       text-sm focus:outline-none"
         />
         <label className="flex items-center space-x-2 text-sm ml-1">
           <Checkbox />
@@ -48,11 +50,11 @@ const CheckoutForm = () => {
             <SelectValue placeholder="Country / Region" />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
+            <SelectGroup className="bg-gray-300 rounded-2xl">
               <SelectLabel>Country or Region</SelectLabel>
-              <SelectItem value="apple">United States</SelectItem>
-              <SelectItem value="banana">Egypt</SelectItem>
-              <SelectItem value="blueberry">Saudi Arabia</SelectItem>
+              <SelectItem value="US">United States</SelectItem>
+              <SelectItem value="EG">Egypt</SelectItem>
+              <SelectItem value="SA">Saudi Arabia</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -115,14 +117,6 @@ const CheckoutForm = () => {
         <p className="text-sm text-graytext mb-4">
           All transactions are secure and encrypted.
         </p>
-        {/* <div className="bg-bggraylight text-graytext flex flex-col items-center gap-3 rounded-md p-6 text-center">
-                            <span>
-                                <AlertCircle size={35} />
-                            </span>
-                            <p className=" text-sm">
-                                This store can’t accept payments right now.
-                            </p>
-                        </div> */}
 
         <PaymentMethods />
 

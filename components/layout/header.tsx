@@ -1,15 +1,15 @@
-import Image from "next/image"; // Keep Image import if you plan to use it for the logo
+import Link from "next/link";
 
 export default function Header() {
     return (
         <>
             {/* 1. Top Announcement/Info Bar */}
             <div className="bg-teal-500 text-white text-center text-xs py-1">
-                Due to uncertain delivery without contacting the market
+                Due to uncertain delivery due maintainence
             </div>
-            
+
             {/* 2. Top Utility Nav Bar */}
-            <div className=" mx-auto px-4 sm:px-6 lg:px-8 w-screen bg-white border-b border-gray-400 py-2 flex justify-between items-center text-sm text-gray-500">
+            <div className=" mx-auto px-4 sm:px-6 lg:px-8  bg-white border-b border-gray-400 py-2 flex justify-between items-center text-sm text-gray-500">
                 <div className="flex space-x-4">
                     <a href="#" className="hover:text-teal-600">About Us</a>
                     <a href="#" className="hover:text-teal-600">Contact</a>
@@ -30,19 +30,17 @@ export default function Header() {
             </div>
 
             <hr className="border-gray-100" />
-            
+
             {/* 3. Main Logo/Search/Cart Bar */}
             <nav className="bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                    
+
                     {/* Logo */}
                     <a href="/" className="flex items-center space-x-2">
                         {/* Placeholder for the logo image */}
-                        <div className="p-2 border border-gray-300 rounded-full bg-teal-500">
-                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7h16M4 11h16M4 15h16M4 19h16"></path></svg>
-                        </div>
+
                         <span className="text-xl font-bold text-gray-800 tracking-tight">
-                            THE <span className="text-teal-500">BASKET</span>
+                            THE <span className="text-teal-500">NERDY</span>
                         </span>
                     </a>
 
@@ -90,13 +88,19 @@ export default function Header() {
 
                     {/* Main Nav Links */}
                     <div className="hidden md:flex space-x-6 text-sm font-medium">
-                        <a href="#" className="text-teal-500 border-b-2 border-teal-500 pb-2">HOME</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">SHOP</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">MEATS & SEAFOOD</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">BAKERY</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">BEVERAGES</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">BLOG</a>
-                        <a href="#" className="text-gray-600 hover:text-teal-500">CONTACT</a>
+                        {/* Best practice: Homepage is usually just "/" */}
+                        <Link href="/" className="text-teal-500 border-b-2 border-teal-500 pb-2">HOME</Link>
+
+                        {/* Use absolute paths for all other links */}
+                        <Link href="/shop" className="text-gray-600 hover:text-teal-500">SHOP</Link>
+
+                        {/* You can create nested routes like this */}
+                        <Link href="/categories/meats-seafood" className="text-gray-600 hover:text-teal-500">MEATS & SEAFOOD</Link>
+                        <Link href="/categories/bakery" className="text-gray-600 hover:text-teal-500">BAKERY</Link>
+                        <Link href="/categories/beverages" className="text-gray-600 hover:text-teal-500">BEVERAGES</Link>
+
+                        <Link href="/blog" className="text-gray-600 hover:text-teal-500">BLOG</Link>
+                        <Link href="/contact" className="text-gray-600 hover:text-teal-500">CONTACT</Link>
                     </div>
                 </div>
             </div>

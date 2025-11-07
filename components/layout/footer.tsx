@@ -127,8 +127,8 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-2">
               {/* NOTE: Replace with your actual image paths */}
-              <a href="#"><img src="/images/google-play.png" alt="Google Play" className="h-8 w-auto" /></a>
-              <a href="#"><img src="/images/app-store.png" alt="App Store" className="h-8 w-auto" /></a>
+              <a href="#"><img src="/images/google_play.png" alt="Google Play" className="h-8 w-auto" /></a>
+              <a href="#"><img src="/images/app-store.jpeg" alt="App Store" className="h-8 w-auto" /></a>
             </div>
           </div>
           
@@ -154,9 +154,9 @@ const Footer: React.FC = () => {
           </div>
           {/* NOTE: Replace with your actual image paths or use a font icon library */}
           <div className="flex space-x-2">
-            <img src="/images/stripe.png" alt="Stripe" className="h-4" />
-            <img src="/images/visa.png" alt="Visa" className="h-4" />
-            <img src="/images/mastercard.png" alt="Mastercard" className="h-4" />
+            <img src="/images/1p.png" alt="Stripe" className="h-4" />
+            <img src="/images/2p.png" alt="Visa" className="h-4" />
+            <img src="/images/3p.png" alt="Mastercard" className="h-4" />
             <img src="/images/paypal.png" alt="PayPal" className="h-4" />
           </div>
         </div>
