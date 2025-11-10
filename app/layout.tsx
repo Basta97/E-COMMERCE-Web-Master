@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer";
 // Import the new Client Component Provider
 import { ReduxProvider } from "@/components/providers/ReduxProvider"; 
 import ReduxInitializer from "@/components/providers/ReduxInitializer";
+import Navbar from "@/components/HomePage/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,7 @@ export default function RootLayout({
         {/* 1. Wrap the entire application body content with the ReduxProvider */}
         <ReduxProvider>
         <ReduxInitializer/>
-          <Header />
+          <Navbar />
           {/* Children are the page components */}
           <main>{children}</main> 
           <Footer />
