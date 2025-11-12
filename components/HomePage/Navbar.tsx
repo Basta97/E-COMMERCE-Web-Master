@@ -14,6 +14,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { CiSearch } from "react-icons/ci";
+import Link from "next/link";
 const Navbar = () => {
   return (
     <>
@@ -218,7 +219,7 @@ const Navbar = () => {
                       alt="breakfast icon"
                       className="inline mr-3"
                     />
-                    Breadfast & Dairy
+                    Breakfast & Dairy
                   </li>
                   <li className="pb-5">
                     <Image
@@ -228,7 +229,7 @@ const Navbar = () => {
                       alt="Frozanfood icon"
                       className="inline mr-3"
                     />
-                    Frozan Foods
+                    Frozen Foods
                   </li>
                   <li className="pb-5">
                     <Image
@@ -309,7 +310,7 @@ const Navbar = () => {
                 BEVERAGES
               </li>
               <li>BLOG</li>
-              <li>CONTACT</li>
+              <Link href={"/contact"}>CONTACT</Link>
             </ul>
           </div>
         </div>
