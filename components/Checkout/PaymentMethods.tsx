@@ -2,11 +2,24 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { CreditCard, Wallet } from "lucide-react";
 
-export function PaymentMethods() {
+interface PaymentMethodsProps {
+  paymentMethod: string;
+  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export function PaymentMethods({
+  paymentMethod,
+  setPaymentMethod,
+}: PaymentMethodsProps) {
   return (
-    <RadioGroup defaultValue="card" className="space-y-3">
+    <RadioGroup
+      defaultValue="card"
+      className="space-y-3"
+      value={paymentMethod}
+      onValueChange={(value) => setPaymentMethod(value)}
+    >
       {/* Card Payment */}
-      <div className="flex items-center justify-between w-full border-2 rounded-lg p-3 cursor-pointer hover:border-bluemain transition duration-300">
+      <div className="flex items-center justify-between w-full border-2 rounded-lg p-3 hover:border-bluemain transition duration-300">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center rounded-full border">
             <CreditCard size={20} />
@@ -20,10 +33,10 @@ export function PaymentMethods() {
           </div>
         </div>
 
-        <RadioGroupItem id="card" value="card" />
+        <RadioGroupItem id="card" value="Card" />
       </div>
       {/* Cash On Delivery */}
-      <div className="flex items-center justify-between w-full border-2 rounded-lg p-3 cursor-pointer hover:border-bluemain transition">
+      <div className="flex items-center justify-between w-full border-2 rounded-lg p-3 hover:border-bluemain transition">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center rounded-full border">
             <Wallet size={20} />
@@ -37,7 +50,7 @@ export function PaymentMethods() {
           </div>
         </div>
 
-        <RadioGroupItem id="cash" value="cash" />
+        <RadioGroupItem id="cash" value="Cash" />
       </div>
     </RadioGroup>
   );
