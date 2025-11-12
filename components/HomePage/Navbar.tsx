@@ -309,7 +309,7 @@ const Navbar = () => {
                 />
                 BEVERAGES
               </li>
-              <li>BLOG</li>
+                <Link href={"/blog"}>BLOG</Link>
               <Link href={"/contact"}>CONTACT</Link>
             </ul>
           </div>
