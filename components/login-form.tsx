@@ -14,74 +14,91 @@ import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { setAuth } from "@/features/auth/authSlice"
 
-
 export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<"form">) {
     const dispatch = useDispatch()
     const router = useRouter()
-    const [Phone,setPhone] = useState("")
-    const [Password,setPassword] = useState("")
-    const [error,setError] = useState("")
-    const handleLogin = async (e:React.FormEvent)=>{
+    const [Phone, setPhone] = useState("")
+    const [Password, setPassword] = useState("")
+    const [error, setError] = useState("")
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setError("")
-        try{
-            const res = await fetch('https://e-commarce-website-eight.vercel.app/api/v1/auth/login',{
-                method:'post',
-                headers: { 'Content-Type': 'application/json' },
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                Phone,
-                Password,
-                })
+                    Phone,
+                    Password,
+                }),
             })
+
             const data = await res.json()
-            if(res.ok){
-            const AccessToken = data.AccessToken
-            const userId = data.user.id 
-            localStorage.setItem('AccessToken',AccessToken)
-            localStorage.setItem('userId',userId)
-            dispatch(setAuth({AccessToken,userId}))
+
+            if (res.ok) {
+                const AccessToken = data.AccessToken
+                const userId = data.user.id
+                localStorage.setItem("AccessToken", AccessToken)
+                localStorage.setItem("userId", userId)
+                dispatch(setAuth({ AccessToken, userId }))
                 router.push("/")
+            } else {
+                setError(data.message || "حدث خطأ أثناء تسجيل الدخول")
             }
-            else {
-        setError(data.message || "حدث خطأ أثناء تسجيل الدخول")
-        }
-        }
-        catch (err: unknown) {
-  if (err instanceof Error) {
-    setError(err.message || "حدث خطأ في الاتصال بالسيرفر")
-  } else {
-    setError("حدث خطأ في الاتصال بالسيرفر")
+        } catch (err: Error | unknown) {
+    const message = err instanceof Error ? err.message : "Server Error";
+    setError(message);
   }
-}
     }
+
     return (
-        <form className={cn("flex flex-col gap-6 ", className)} {...props} onSubmit={handleLogin}>
+        <form className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleLogin}>
             <FieldGroup>
-                <div className="flex flex-col items-center gap-1 text-center p-3 ">
+                <div className="flex flex-col items-center gap-1 text-center p-3">
                     <h1 className="text-2xl font-bold text-primary">Login to your account</h1>
                     <p className="text-muted-foreground text-sm text-balance">
-                        Enter your email below to login to your account
+                        Enter your phone and password to login
                     </p>
                 </div>
                 <Field>
                     <FieldLabel htmlFor="phone">Phone</FieldLabel>
-                    <Input id="phone" type="text" placeholder="01015121678" required value={Phone} onChange={(e)=> setPhone(e.target.value)} />
+                    <Input
+                        id="phone"
+                        type="text"
+                        placeholder="01015121678"
+                        required
+                        value={Phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
                 </Field>
                 <Field>
-                        <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" type="password" required value={Password} onChange={(e)=> setPassword(e.target.value)} />
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <Input
+                        id="password"
+                        type="password"
+                        required
+                        value={Password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                 </Field>
                 <Field>
-                    <Button type="submit" variant='default'>Login</Button>
+                    <Button type="submit" variant="default">
+                        Login
+                    </Button>
                 </Field>
-                <p className="text-center text-red-500">{error}</p>
+                {
+                    error &&(
+                        <p className="text-center text-red-500">{error}</p>
+                    )
+                }
                 <Field>
                     <FieldDescription className="text-center">
                         Don&apos;t have an account?{" "}
-                        <Link href="/auth/register" className="underline underline-offset-4">
+                        <Link href="/signup" className="underline underline-offset-4">
                             Sign up
                         </Link>
                     </FieldDescription>
