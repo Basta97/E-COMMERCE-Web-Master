@@ -18,7 +18,25 @@ import { StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 
-const Bestsellers = () => {
+
+async function getBestSellerData(){
+  const response = await fetch("https://e-commarce-website-eight.vercel.app/api/v1/product/get-bestseller", {
+    method:"GET",
+    headers:{
+      "Content-Type":"application/json",
+    }
+
+  })
+
+  if(!response.ok){
+    throw new Error("Failed To Fetch Data")
+  }
+  return response.json()
+}
+
+const Bestsellers = async() => {
+  const data = await getBestSellerData()
+  console.log("Data", data)
   return (
     <div className="container ">
       <div className="myBEST flex gap-8 md:gap-20 justify-between">
@@ -45,9 +63,9 @@ const Bestsellers = () => {
               className="w-full 2xl:max-w-210 xl:max-w-160 lg:max-w-110 md:max-w-85"
             >
               <CarouselContent>
-                {Array.from({ length: 10 }).map((_, index) => (
+                {data.data.length > 0 && data.data.map((item:any) => (
                   <CarouselItem
-                    key={index}
+                    key={item.productId}
                     className="lg:basis-1/2 xl:basis-1/3 2xl:basis-1/4 md:basis-1/2 "
                   >
                     <div className="p-1">
@@ -60,7 +78,7 @@ const Bestsellers = () => {
                                 22%
                               </span>
                               <Image
-                                src="/images/seller1.png"
+                                src={item.image}
                                 width={1000}
                                 height={1000}
                                 alt="Product Image"
@@ -68,11 +86,11 @@ const Bestsellers = () => {
                               />
                             </div>
                           </div>
-                          <CardTitle className="text-sm mb-1">
-                            All Natural Italian-Style Chicken Meatballs
+                          <CardTitle className="text-sm mb-1 h-24">
+                           {item.name}
                           </CardTitle>
                           <CardDescription className="text-xs mb-2 line-clamp-2 text-[#00B853]">
-                            IN STOCK
+                            IN STOCK: {item.totalSold}
                           </CardDescription>
                           <div className="flex items-center space-x-1 mb-2">
                             <div className="flex">
@@ -93,7 +111,7 @@ const Bestsellers = () => {
                               <span className="line-through mr-2 text-[#C2C2D3] text-xs">
                                 $300
                               </span>
-                              $199
+                              {item.price}
                             </span>
                           </div>
                           {/*********Quantity***********/}
