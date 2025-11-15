@@ -299,18 +299,17 @@ const Navbar = () => {
           </DropdownMenu>
           <div className="NavItem">
             <ul className="NavTHIRD flex justify-between items-center gap-4 font-semibold text-[#3E445A]">
-               <DropdownMenu>
-                <div className=" flex justify-between items-start gap-0.5 ml-2.5">
-                  <DropdownMenuTrigger>
-                     HOME
-                    <IoIosArrowDown className="inline" />
-                  </DropdownMenuTrigger>
-                </div>
-                <DropdownMenuContent >
-                  <DropdownMenuItem>Home1</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <li>SHOP</li>
+               <Link href='/' className='text-[#3E445A] hover:text-[#35AFA0]'>
+                   <div className=" flex justify-between items-start gap-0.5 ml-2.5">
+                       HOME
+                   </div>
+               </Link>
+
+             <Link href='/shop' className='text-[#3E445A] hover:text-[#35AFA0]'>
+                  <div className=" flex justify-between items-start gap-0.5 ml-2.5">
+                      shop
+                  </div>
+              </Link>
               <li className="flex items-center">
                 <Image
                   src="/icons/meat.png"
