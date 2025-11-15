@@ -4,7 +4,7 @@ import Image from "next/image";
 const Hotproducts = () => {
   return (
     <div className="container">
-      <div className="HotProd flex justify-between gap-8">
+      <div className="HotProd flex justify-between gap-8 ">
         <div>
           <div className="bgImage">
             <div className="p-5 mt-5">

@@ -1,60 +1,116 @@
-# E-commerce Web Application
+# E‑Commerce Web Application
 
-This is a simple e-commerce web application built with Next.js and other modern web technologies.
+An e‑commerce web app built with Next.js App Router, Redux Toolkit, and Tailwind CSS. It integrates with a remote backend for authentication, products, and cart operations.
 
-## Features
+## Highlights (What’s new)
 
-*   User Authentication (Login/Register)
-*   Product Listing
-*   Shopping Cart
-*   Checkout Process
-*   Contact Page
+- Auth endpoints proxied via Next.js API routes
+  - POST `/api/auth/refresh` → backend `https://e-commarce-website-eight.vercel.app/api/v1/auth/refresh`
+  - PUT `/api/auth/update-profile/[id]` → backend `.../auth/update-profile/:id`
+  - POST `/api/auth/logout` → backend `.../auth/logout`
+- 10‑minute token timeout with auto‑logout
+  - `expiresAt` stored in Redux and `localStorage`. Auto logout fires when time is up.
+- Cart resiliency and normalization
+  - Uses `Authorization: Bearer <token>` and `cache: "no-store"`.
+  - Automatically attempts a one‑time token refresh on `401` then retries.
+  - Normalizes cart item shape so items render consistently.
+- Guest cart with seamless sync on login
+- Shop page product card layout improved (better name/price/image visibility)
+- Navbar cleanup with Login/Sign Up when logged out and Logout when authenticated
 
-## Technologies Used
+## Tech Stack
 
-*   [Next.js](https://nextjs.org/) - React framework for building server-side rendered and static web applications.
-*   [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
-*   [Redux Toolkit](https://redux-toolkit.js.org/) - The official, opinionated, batteries-included toolset for efficient Redux development.
-*   [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
-*   [Radix UI](https://www.radix-ui.com/) - A collection of unstyled, accessible UI components.
-*   [TypeScript](https://www.typescriptlang.org/) - A typed superset of JavaScript that compiles to plain JavaScript.
-*   [ESLint](https://eslint.org/) - A tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
+- Next.js (App Router)
+- React + TypeScript
+- Redux Toolkit
+- Tailwind CSS
+- Radix UI
 
 ## Getting Started
 
-First, install the dependencies:
+1. Install dependencies
+   ```bash
+   npm install
+   ```
+2. Run the dev server
+   ```bash
+   npm run dev
+   ```
+3. Open http://localhost:3000
 
-```bash
-npm install
-```
+No additional env is required for the listed features; the app proxies to the provided backend domain.
 
-Then, run the development server:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Folder Structure
+## Project Structure
 
 ```
 .
-├── app/              # Main application folder (App Router)
-│   ├── auth/         # Authentication pages
-│   ├── contact/      # Contact page
-│   └── shop/         # Shop pages (cart, checkout)
-├── components/       # React components
-│   ├── ui/           # UI components
-│   ├── layout/       # Layout components (header, footer)
-│   └── ...
-├── features/         # Redux Toolkit slices
+├── app/                      # App Router entry points and API routes (proxies)
+│   ├── api/
+│   │   ├── auth/
+│   │   │   ├── refresh/route.ts
+│   │   │   ├── logout/route.ts
+│   │   │   └── update-profile/[id]/route.ts
+│   │   └── cart/
+│   │       ├── get-cart/route.ts
+│   │       └── add-cart/route.ts
+│   ├── contact/
+│   ├── shop/
+│   └── page.tsx
+├── components/               # UI and feature components
+│   ├── HomePage/
+│   ├── Cart/
+│   ├── providers/
+│   └── ui/
+├── features/                 # Redux Toolkit slices
 │   ├── auth/
-│   ├── cart/
-│   └── products/
-├── lib/              # Libraries and utilities
-│   ├── store.ts      # Redux store
-│   └── utils.ts
-├── public/           # Static assets
+│   └── cart/
+├── lib/
+│   └── store.ts              # Redux store
+├── public/                   # Static assets
 └── ...
 ```
+
+## Auth Flow
+
+- On successful login (`/api/login`), we keep `AccessToken`, `userId`, and set `expiresAt = now + 10 minutes`.
+- On app load, `ReduxInitializer` restores auth state. If expired, it logs out immediately. If not, it schedules auto‑logout.
+- On any `401` from cart endpoints, the client calls `/api/auth/refresh` once, stores the new token and a renewed 10‑minute `expiresAt`, and retries the original request.
+- The Navbar shows Login/Sign Up when logged out and a Logout button when authenticated. Logout clears Redux/localStorage and calls `/api/auth/logout` (best effort).
+
+## API Usage Examples
+
+Refresh token:
+```ts
+await fetch('/api/auth/refresh', { method: 'POST', headers: { Authorization: `Bearer ${AccessToken}` } })
+```
+
+Update profile:
+```ts
+await fetch(`/api/auth/update-profile/${userId}`, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${AccessToken}` },
+  body: JSON.stringify({ Name: 'Ali', Phone: '01023079853', Email: 'omarelhelalit3@gmail.com' })
+})
+```
+
+Logout:
+```ts
+await fetch('/api/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${AccessToken}` } })
+```
+
+## Cart Behavior
+
+- Logged‑out users: items are stored in `localStorage` and the cart badge updates accordingly.
+- On login: local (guest) items are synced to the server cart.
+- Logged‑in users: all cart operations go through `/api/cart/*` with bearer token; a single refresh attempt occurs on `401`.
+
+## Scripts
+
+- `npm run dev` – start development server
+- `npm run build` – production build
+- `npm run start` – start production server
+- `npm run lint` – run ESLint
+
+## Notes
+
+- The backend base URL is currently `https://e-commarce-website-eight.vercel.app`. If you need to point to a different backend, you can adjust the `BASE_URL` constants in the proxy API route files under `app/api/*`.

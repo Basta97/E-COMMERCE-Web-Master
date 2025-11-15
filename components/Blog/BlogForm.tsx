@@ -20,7 +20,7 @@ const formSchema = z.object({
     content: z.string().min(10, "Content is required"),
     tags: z.string().min(2, "Add at least one tag"),
     author: z.string().min(3, "Author name is required"),
-    image: z.any().optional(), // file upload not validated by URL
+    image: z.any().optional(),
 })
 
 

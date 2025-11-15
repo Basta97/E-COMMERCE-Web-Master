@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { CiShoppingCart } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
@@ -15,7 +16,31 @@ import {
 } from "@/components/ui/input-group";
 import { CiSearch } from "react-icons/ci";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/lib/store";
+import { logout } from "@/features/auth/authSlice";
+import { useRouter } from "next/navigation";
 const Navbar = () => {
+  const cartCount = useSelector((state: RootState) => state.cart.count);
+  const auth = useSelector((state: RootState) => state.auth as any);
+  const isAuthed = !!auth?.AccessToken;
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("AccessToken");
+      if (token) {
+        await fetch('/api/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+      }
+    } catch {}
+    // Clear storage and redux
+    localStorage.removeItem('AccessToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('expiresAt');
+    dispatch(logout());
+    router.push('/');
+  }
   return (
     <>
       {/****First green line****/}
@@ -35,10 +60,10 @@ const Navbar = () => {
         <div className="nav flex justify-between items-center mt-3 ">
           <div className="">
             <ul>
-              <li className="flex justify-center items-center gap-3 text-xs sm:text-[9.5px]">
-                <p>About Us</p>
-                <p>Compare</p>
-                <p>Wishlist</p>
+              <li className="flex justify-center items-center gap-4 text-xs sm:text-[11px]">
+                <Link href="/" className="hover:text-[#35AFA0]">Home</Link>
+                <Link href="/shop" className="hover:text-[#35AFA0]">Shop</Link>
+                <Link href="/contact" className="hover:text-[#35AFA0]">Contact</Link>
               </li>
             </ul>
           </div>
@@ -125,27 +150,34 @@ const Navbar = () => {
             </InputGroup>
           </div>
           <div>
-            <ul className="flex justify-between items-center">
-              <li className="mr-2">
-                <Image
-                  src="/icons/profile.png"
-                  width={35}
-                  height={35}
-                  alt="profile image"
-                />
-              </li>
-              <li className="mr-2">$0.00</li>
-              <li className="rounded-full h-10 w-10 bg-[#fff1ee] align-center ">
-                <div className="">
-                  <span className="bg-[#ec462d] absolute ml-8 -mt-[-2.5] w-6 h-6 rounded-full text-white text-center">
-                    0
-                  </span>
-                  <CiShoppingCart
-                    size="30px"
-                    color="#ec462d"
-                    className="mt-[5px] mx-auto relative"
-                  />
-                </div>
+            <ul className="flex justify-between items-center gap-3">
+              {!isAuthed ? (
+                <>
+                  <li>
+                    <Link href="/auth/login" className="text-sm hover:text-[#35AFA0]">Login</Link>
+                  </li>
+                  <li>
+                    <Link href="/auth/register" className="text-sm hover:text-[#35AFA0]">Sign Up</Link>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <button onClick={handleLogout} className="text-sm text-red-500 hover:text-red-600">Logout</button>
+                </li>
+              )}
+              <li className="rounded-full h-10 w-10 bg-[#fff1ee] align-center relative">
+                <Link href="/shop/cart-checkout" aria-label="Go to cart" className="block h-full w-full">
+                  <div className="">
+                    <span className="bg-[#ec462d] absolute -top-2 -right-2 w-6 h-6 rounded-full text-white text-center text-xs flex items-center justify-center">
+                      {cartCount || 0}
+                    </span>
+                    <CiShoppingCart
+                      size="30px"
+                      color="#ec462d"
+                      className="mt-[5px] mx-auto relative"
+                    />
+                  </div>
+                </Link>
               </li>
             </ul>
           </div>

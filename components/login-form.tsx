@@ -13,6 +13,7 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useRouter } from "next/navigation"
 import { setAuth } from "@/features/auth/authSlice"
+import { getLocalCart, clearLocalCart } from "@/lib/cartLocal"
 
 export function LoginForm({
     className,
@@ -42,9 +43,39 @@ export function LoginForm({
             if (res.ok) {
                 const AccessToken = data.AccessToken
                 const userId = data.user.id
+                // client-side token policy: 10 minutes expiry from now
+                const expiresAt = Date.now() + 10 * 60 * 1000
                 localStorage.setItem("AccessToken", AccessToken)
                 localStorage.setItem("userId", userId)
-                dispatch(setAuth({ AccessToken, userId }))
+                localStorage.setItem("expiresAt", String(expiresAt))
+                dispatch(setAuth({ AccessToken, userId, expiresAt }))
+
+                // Sync any guest cart items to the server cart
+                try {
+                    const localItems = getLocalCart();
+                    if (localItems.length) {
+                        await Promise.all(
+                            localItems.map((it) =>
+                                fetch("/api/cart/add-cart", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${AccessToken}`,
+                                    },
+                                    body: JSON.stringify({
+                                        userId,
+                                        productId: it.productId,
+                                        quantity: it.quantity || 1,
+                                    }),
+                                })
+                            )
+                        );
+                        clearLocalCart();
+                    }
+                } catch (syncErr) {
+                    console.warn("Cart sync after login encountered an issue", syncErr);
+                }
+
                 router.push("/")
             } else {
                 setError(data.message || "حدث خطأ أثناء تسجيل الدخول")
@@ -98,7 +129,7 @@ export function LoginForm({
                 <Field>
                     <FieldDescription className="text-center">
                         Don&apos;t have an account?{" "}
-                        <Link href="/signup" className="underline underline-offset-4">
+                        <Link href="/auth/register" className="underline underline-offset-4">
                             Sign up
                         </Link>
                     </FieldDescription>

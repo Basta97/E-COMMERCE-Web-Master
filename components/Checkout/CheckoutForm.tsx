@@ -1,5 +1,7 @@
 // components/CheckoutForm.tsx (Updated)
+"use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import {
   Select,
@@ -15,19 +17,46 @@ import { PaymentMethods } from "./PaymentMethods";
 import { Button } from "../ui/button";
 
 const CheckoutForm = () => {
+  const [hasToken, setHasToken] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem("AccessToken");
+    setHasToken(!!token);
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "AccessToken") setHasToken(!!e.newValue);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   return (
     // REMOVED: flex-2 lg:flex-3
     <div className="space-y-6">
+      {!hasToken && (
+        <div className="w-full rounded-md border border-amber-300 bg-amber-50 p-3 text-amber-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <p className="text-sm">
+              You are not signed in. Please log in to checkout.
+            </p>
+            <Link href="/auth/login" className="text-sm underline underline-offset-4">
+              Go to Login
+            </Link>
+          </div>
+        </div>
+      )}
       {/* Contact */}
       <div>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold mb-3">Contact</h2>
-          <Link
-            href="/login"
-            className="underline cursor-pointer text-bluemain text-sm"
-          >
-            log in
-          </Link>
+          {!hasToken && (
+            <Link
+              href="/auth/login"
+              className="underline cursor-pointer text-bluemain text-sm"
+            >
+              log in
+            </Link>
+          )}
         </div>
 
         <input
@@ -120,7 +149,16 @@ const CheckoutForm = () => {
 
         <PaymentMethods />
 
-        <Button className="mt-6 w-full cursor-pointer">Pay now</Button>
+        <Button className="mt-6 w-full cursor-pointer" disabled={!hasToken}>
+          {hasToken ? "Pay now" : "Login to pay"}
+        </Button>
+        {!hasToken && (
+          <div className="mt-2">
+            <Link href="/auth/login">
+              <Button variant="outline" size="sm">Login to continue</Button>
+            </Link>
+          </div>
+        )}
       </div>
       <div className=" w-full h-px bg-grayborder mb-3"></div>
       <span className="underline cursor-pointer text-bluemain text-sm">
