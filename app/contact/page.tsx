@@ -5,7 +5,7 @@ const ContactPage = () => {
     // Contact form is now a client component: see components/componentForm.tsx
 
     return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 py-5">
       {/* FIX 1: Added `mx-auto` to center the container.
         FIX 2: Added `py-16` (padding-top/bottom) for better vertical spacing.
       */}
