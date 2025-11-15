@@ -82,7 +82,7 @@ const Hotproducts = () => {
                   <li className="bg-[#EDEEF5] w-8 h-8 text-center pt-1">44</li>
                   <span className="mx-1">:</span>
                   <li className="bg-[#EDEEF5] w-8 h-8 text-center pt-1">54</li>
-                  <div className=" text-xs ml-2">
+                  <div className="timing text-xs ml-2">
                     Remains until the end <br /> of the offer
                   </div>
                 </ul>
